@@ -25,6 +25,7 @@ import pers.steve.sensor.item.*;
 
 import javax.print.attribute.standard.NumberUp;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.EventListener;
@@ -53,6 +54,8 @@ public class SensorImuViewerController extends SensorWriteFileInterface implemen
     @FXML
     public Label nameLabel;
 
+    @FXML
+    public CheckBox statuBox;
 
     @FXML
     public ChoiceBox<String> deviceChoice = null;
@@ -144,6 +147,8 @@ public class SensorImuViewerController extends SensorWriteFileInterface implemen
 
     public SerialAbstract serialInterface = new SerialAbstract();// serial reader.
 
+    private File status_file;
+    public FileWriter status_file_writer;
 
     /**
      * Called to initialize a controller after its root element has been
@@ -177,8 +182,9 @@ public class SensorImuViewerController extends SensorWriteFileInterface implemen
                 } else {
                     counter = 0;
                 }
-//                System.out.println(event.getSensorData().convertDatatoString());
+//              System.out.println(event.getSensorData().convertDatatoString());
                 IMUDataElement sensorData = event.getSensorData();
+
                 double acc_time = new Double(sensorData.getSystem_time_stamp());
                 double acc_x = new Double(sensorData.getAcc()[0]);
                 double acc_y = new Double(sensorData.getAcc()[1]);
@@ -399,6 +405,29 @@ public class SensorImuViewerController extends SensorWriteFileInterface implemen
             });
         });
 
+       statuBox.setOnAction(event -> {
+           double time = ((double) System.currentTimeMillis()/1000.0);
+
+           double sstatus = 0;
+           if(statuBox.isSelected()){
+               System.out.println("check box selected");
+               sstatus = 100;
+           }else{
+               System.out.println("check box un selected");
+               sstatus = -100;
+           }
+           try{
+                System.out.println(String.format("%15.03f", time)+","+ Double.toString(sstatus)+"\n");
+               status_file_writer.write(String.format("%15.03f", time)+","+ Double.toString(sstatus)+"\n");
+               status_file_writer.flush();
+           }catch (IOException e){
+               e.printStackTrace();
+
+           }
+           System.out.println("check box clicked");
+       });
+
+
 
     }
 
@@ -411,7 +440,9 @@ public class SensorImuViewerController extends SensorWriteFileInterface implemen
     public boolean setDirectoryFile(File dirFile) {
         if (nameOfImu.indexOf("Default") < 0) {
             File f = new File(dirFile, nameOfImu + ".data");
+            status_file = new File(dirFile, nameOfImu + "statu.data");
             try {
+
 
                 f.createNewFile();
             } catch (IOException e) {
@@ -434,6 +465,12 @@ public class SensorImuViewerController extends SensorWriteFileInterface implemen
      */
     @Override
     public boolean startWrite() {
+        try{
+            status_file_writer = new FileWriter(status_file.toString());
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         return imuJY.startFileOutput(1);
     }
 
@@ -444,6 +481,12 @@ public class SensorImuViewerController extends SensorWriteFileInterface implemen
      */
     @Override
     public boolean stopWrite() {
+        try{
+            status_file_writer.flush();
+            status_file_writer.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         return imuJY.stopFileOutput(0);
     }
 }

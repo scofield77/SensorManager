@@ -90,7 +90,7 @@ public class GUITest extends Application {
 
                 File saveDirFile = new File(dirFile.getAbsolutePath(), String.format("%04d", max_number));
                 saveDirFile.mkdir();
-                System.out.println(saveDirFile.getAbsolutePath());
+                System.out.println("saveDirFilePath"+saveDirFile.getAbsolutePath());
 
 
                 for (SensorWriteFileInterface writer : controllerHashSet) {

@@ -12,12 +12,14 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.CheckBox?>
 <FlowPane fx:id="mainPane"
           xmlns="http://javafx.com/javafx/8.0.121"
           xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="pers.steve.sensor.gui.SensorImuViewerController">
     <HBox fx:id="allBox">
         <VBox fx:id="paraBox">
+            <CheckBox fx:id="statuBox" text="droppint state"/>
             <Label fx:id="nameLabel" text="Default IMU"/>
             <ChoiceBox fx:id="nameChoice"/>
 

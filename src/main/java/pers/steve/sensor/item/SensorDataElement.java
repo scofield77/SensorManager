@@ -4,6 +4,7 @@ public abstract class SensorDataElement {
     protected String dataname = "SensorDataElement"; // name of data
     protected int data_index = -1; // index of data
     protected double time_stamp = 0.0; //time stamp
+    protected double system_time_stamp = 0.0; // time stamp of system.
 
     public double getSystem_time_stamp() {
         return system_time_stamp;
@@ -13,7 +14,7 @@ public abstract class SensorDataElement {
         this.system_time_stamp = system_time_stamp;
     }
 
-    protected double system_time_stamp = 0.0; // time stamp of system.
+
 
     /**
      * Convert Data to String( with '\n' at the end).
@@ -39,6 +40,7 @@ public abstract class SensorDataElement {
     }
 
     public double getTime_stamp() {
+
         return time_stamp;
     }
 
